@@ -1,0 +1,15 @@
+npm i helmet hpp
+app.js 수정(helmet, hpp 부분 추가)
+
+npm i redis connect-redis
+.env 수정(redis부분 추가)
+app.js 수정(redis부분 추가)
+
+.gitignore 작성
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/Reinhar37/nodebird //origin은 주소의 별명
+git remote get-url origin //origin확인
+git remote rm origin //origin삭제
+git push origin master

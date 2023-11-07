@@ -1,0 +1,66 @@
+npm i -D jest
+테스트할 파일은 파일이름과 확장자사이에 test나 spec를 넣는다 ex) index.js 를 index.text.js
+test('테스트 설명', () => {
+  expect(테스트 코드).toEqual(예상 결과값);
+});
+
+describe('테스트 그룹 설명', () => { // 테스트 그룹묶기, 비슷한것끼리 describe로 묶을 수 있다.
+  test('테스트 설명', () => {
+    expect(테스트 코드).toEqual(예상 결과값);
+  });
+  test('테스트 설명', () => {
+    expect(테스트 코드).toEqual(예상 결과값);
+  });
+});
+
+테스트 커버리지 //얼마나 테스트됬나 어느부분이 테스트되지않았나 알려줌
+명령어 "coverage": "jest --coverage" 추가
+전체프로젝트 확인이 아님 테스트했던곳에서만 확인해준다
+require한것들도 확인함
+
+통합테스트
+npm i -D supertest
+테스트할때 서버가 실행되면 안되므로 server.js를 만들어서 서버실행부분을 따로만든다 app.js수정 package.json main,명령문 수정
+npx sequelize db:create --env test //테스트용 db 생성
+
+부하테스트
+//개발용에서만 써야한다 AWS에서 사용해버리면 서버를 자동으로늘어나서 요금이 늘어난다
+npm i -D artillery
+npx artillery quick --count 100 -n 50 http://localhost:8001 //100명이 50번씩 http://localhost:8001에 get 요청을 보낸다.
+median과 p95를 잘보는게 중요한다 각각 중간지점 95%지점이다.
+
+quick는 간단한 명령밖에 수행하지않으므로 시나리오를 만들어서 테스트를 한다.
+loadtest.json 생성
+{
+  "config": {
+    "target": "http://localhost:8001",
+    "http": {
+      "timeout": 30 //요청이 30초간안오면 실패한걸로 해라
+    },
+    "phases": [{
+      "duration": 30, //30초동안
+      "arrivalRate": 20 //매초 20명의 사람이 접근
+    }]
+  },
+  "scenarios": [
+    {
+      "flow": [ //요청의 리스트
+        { "get": { "url": "/"} },
+        { "post": {
+          "url": "/auth/login",
+          "json": { "email": "123@naver.com", "password": "123" },
+          "followRedirect": false //리다이렉트가있으면 리다이렉트로 안가게함
+          }
+        },
+        {
+          "get": {
+            "url": "hashtag?hashtag=트윈테일"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+npx artillery run loadtest.json
+All VUs finished.이 뜨면 최종보고서 그전은 중간보고서

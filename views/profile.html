@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="timeline">
+    <div class="followings half">
+      <h2>닉네임</h2>
+      <div>{{user.nick}}</div>
+      <button id="updateNick" class="twit-button">수정</button>
+    </div>
+    <div class="followings half">
+      <h2>팔로잉 목록</h2>
+      {% if user.Followings %}
+        {% for following in user.Followings %}
+          <div>{{following.nick}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="followers half">
+      <h2>팔로워 목록</h2>
+      {% if user.Followers %}
+        {% for follower in user.Followers %}
+          <div>{{follower.nick}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    document.querySelectorAll('#updateNick').forEach(function(tag) {
+      tag.addEventListener('click', function() {
+        const myId = document.querySelector('#my-id').value;
+        const newNick = prompt('변경하실 닉네임을 입력해주세요.');
+        if (!newNick) {
+        return alert('내용을 반드시 입력하셔야 합니다');
+        }
+        axios.patch(`/user/${myId}/updateProfile`, { nick: newNick })
+          .then(() => {
+            location.reload();
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+        
+      });
+    });
+  </script>
+{% endblock %}
