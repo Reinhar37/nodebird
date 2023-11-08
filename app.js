@@ -9,7 +9,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const redis = require('redis');
-const RedisStore = require('connect-redis').default;
+const RedisStore = require('connect-redis').default; 
 const { sequelize } = require('./models');
 
 //process.env.COOKIE_SECRET 없음 
