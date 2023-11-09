@@ -39,4 +39,5 @@ cd ~/nodebird
 sudo NODE_ENV=production PORT=80 pm2 start server.js -i 0
 sudo pm2 list
 sudo pm2 monit
+sudo git pull
 /////여기까지
